@@ -1,0 +1,12 @@
+{
+    "frame": {
+        "version": "1",
+        "name": "Union Voucher Graph",
+        "iconUrl": "/logo.png",
+        "homeUrl": "/",
+        "imageUrl": "/opengraph-image.png",
+        "buttonTitle": "View Graph",
+        "splashImageUrl": "/logo.png",
+        "splashBackgroundColor": "#3b82f6"
+    }
+}

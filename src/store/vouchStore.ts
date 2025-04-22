@@ -46,10 +46,10 @@ const useVouchStore = create((set, get) => ({
         set({ selectedNode: null, showDetails: false });
     },
 
-    setSearchTerm: (term) => {
+    setSearchTerm: (term: string) => {
         set({ searchTerm: term });
 
-        
+        // Don't filter if search term is empty
         const { graphData } = get();
         if (!term.trim()) {
             set({ filteredData: graphData });
@@ -57,21 +57,25 @@ const useVouchStore = create((set, get) => ({
         }
 
         const termLower = term.toLowerCase();
+
+        // Optimize search by creating a more efficient filtering process
+        // First, find nodes that match the search term
         const filteredNodes = graphData.nodes.filter(node =>
-            node.name.toLowerCase().includes(termLower) ||
-            node.address.toLowerCase().includes(termLower)
+            (node.name && node.name.toLowerCase().includes(termLower)) ||
+            (node.address && node.address.toLowerCase().includes(termLower))
         );
 
+        // Create a Set for faster lookups
         const nodeIds = new Set(filteredNodes.map(node => node.id));
 
-        
+        // Filter links to include only those that connect to filtered nodes
         const filteredLinks = graphData.links.filter(link => {
             const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
             const targetId = typeof link.target === 'object' ? link.target.id : link.target;
             return nodeIds.has(sourceId) || nodeIds.has(targetId);
         });
 
-        
+        // Add connected nodes to ensure the graph shows complete relationships
         filteredLinks.forEach(link => {
             const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
             const targetId = typeof link.target === 'object' ? link.target.id : link.target;
@@ -80,8 +84,10 @@ const useVouchStore = create((set, get) => ({
             nodeIds.add(targetId);
         });
 
+        // Get the expanded nodes list from the Set
         const expandedNodes = graphData.nodes.filter(node => nodeIds.has(node.id));
 
+        // Update filtered data with optimized results
         set({
             filteredData: {
                 nodes: expandedNodes,

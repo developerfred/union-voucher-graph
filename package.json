@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@farcaster/frame-node": "^0.0.21",
+    "@farcaster/frame-sdk": "^0.0.35",
     "@types/d3": "^7.4.3",
     "@types/lodash": "^4.17.16",
     "class-variance-authority": "^0.7.1",
